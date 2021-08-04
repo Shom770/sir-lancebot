@@ -35,7 +35,7 @@ class Stackoverflow(commands.Cog):
         """Sends the top 5 results of a search query from stackoverflow."""
         if ',' in tag:
             tag = tag.split(',') if ', ' not in tag else tag.split(', ')
-        else:
+        elif tag != '':
             tag = [tag]
         encoded_search_query = quote_plus(search_query)
         encoded_tag_query = quote_plus(';'.join(tag))
@@ -53,8 +53,7 @@ class Stackoverflow(commands.Cog):
                 title=f"No search results found for {search_query}",
                 color=Colours.soft_red
             )
-            if tag != '':
-                await ctx.send(tag)
+            if tag:
                 no_search_result.description = f"A search result couldn't be found with " \
                                                f"the following tags added: {', '.join(tag)}"
             await ctx.send(embed=no_search_result)
