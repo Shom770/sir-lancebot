@@ -55,7 +55,7 @@ class Stackoverflow(commands.Cog):
             )
             if tag:
                 no_search_result.description = f"A search result couldn't be found with " \
-                                               f"the following tags added: {', '.join(tag)}"
+                                               f"the following tags added: **{', '.join(tag)}**"
             await ctx.send(embed=no_search_result)
             return
 
