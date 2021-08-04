@@ -1,7 +1,7 @@
 import logging
 from html import unescape
 from urllib.parse import quote_plus
-
+from sys import stdout
 from discord import Embed, HTTPException
 from discord.ext import commands
 
@@ -11,7 +11,7 @@ from bot.constants import Colours, Emojis
 logger = logging.getLogger(__name__)
 
 BASE_URL = "https://api.stackexchange.com/2.2/search/advanced?order=desc&sort=activity&" \
-           "tagged=python;json&site=stackoverflow&q={query}"
+           "tagged={tags}&site=stackoverflow&q={query}"
 SEARCH_URL = "https://stackoverflow.com/search?q={query}"
 ERR_EMBED = Embed(
     title="Error in fetching results from Stackoverflow",
@@ -31,12 +31,17 @@ class Stackoverflow(commands.Cog):
 
     @commands.command(aliases=["so"])
     @commands.cooldown(1, 15, commands.cooldowns.BucketType.user)
-    async def stackoverflow(self, ctx: commands.Context, *, search_query: str, tag: str = '') -> None:
+    async def stackoverflow(self, ctx: commands.Context, search_query: str, *, tag: str = '') -> None:
         """Sends the top 5 results of a search query from stackoverflow."""
+        if ',' in tag:
+            tag = tag.split(',') if ', ' not in tag else tag.split(', ')
+        else:
+            tag = [tag]
         encoded_search_query = quote_plus(search_query)
-        encoded_tag_query = quote_plus(tag)
+        encoded_tag_query = quote_plus(';'.join(tag))
 
-        async with self.bot.http_session.get(BASE_URL.format(query=encoded_search_query)) as response:
+        async with self.bot.http_session.get(BASE_URL.format(query=encoded_search_query,
+                                                             tags=encoded_tag_query)) as response:
             if response.status == 200:
                 data = await response.json()
             else:
@@ -44,8 +49,9 @@ class Stackoverflow(commands.Cog):
                 await ctx.send(embed=ERR_EMBED)
                 return
         if not data['items']:
+            err_tags = f" with tag(s) {', '.join(tag)}" if tag != '' else ''
             no_search_result = Embed(
-                title=f"No search results found for {search_query}",
+                title=f"No search results found for {search_query}{err_tags}",
                 color=Colours.soft_red
             )
             await ctx.send(embed=no_search_result)
