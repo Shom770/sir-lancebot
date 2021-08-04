@@ -49,7 +49,7 @@ class Stackoverflow(commands.Cog):
                 await ctx.send(embed=ERR_EMBED)
                 return
         if not data['items']:
-            err_tags = f" with tag(s) {', '.join(tag)}" if tag != '' else ''
+            err_tags = f" with tag(s) {', '.join(tag)}" if isinstance(tag, list) else ''
             no_search_result = Embed(
                 title=f"No search results found for {search_query}{err_tags}",
                 color=Colours.soft_red
