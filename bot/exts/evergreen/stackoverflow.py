@@ -33,10 +33,16 @@ class Stackoverflow(commands.Cog):
     @commands.cooldown(1, 15, commands.cooldowns.BucketType.user)
     async def stackoverflow(self, ctx: commands.Context, search_query: str, *, tag: str = '') -> None:
         """Sends the top 5 results of a search query from stackoverflow."""
-        if ',' in tag:
-            tag = tag.split(',') if ', ' not in tag else tag.split(', ')
-        elif tag != '':
-            tag = [tag]
+        if '-t' in tag:
+            tag = tag.replace('-t ', '').split(' ')
+            if len(tag) > 5:
+                too_many_tags = Embed(
+                    title="The maximum amount of tags allowed is 5.",
+                    color=Colours.soft_red
+                )
+                await ctx.send(embed=too_many_tags)
+                return
+
         encoded_search_query = quote_plus(search_query)
         encoded_tag_query = quote_plus(';'.join(tag))
 
