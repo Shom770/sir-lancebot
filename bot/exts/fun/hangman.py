@@ -110,7 +110,7 @@ class Hangman(commands.Cog):
             hangman_embed.set_footer(text=f"Tries: {tries}")
             await original_message.edit(embed=hangman_embed)
 
-            # Sends a message if the user does not guess within 60 seconds
+            # Alerts the user if they do not guess within 60 seconds
             try:
                 message = await self.bot.wait_for(
                     event="message",
@@ -129,7 +129,7 @@ class Hangman(commands.Cog):
             # If the user enters a capital letter as their guess, it is automatically converted to a lowercase letter
             message.content = message.content.lower()
 
-            # Sends a message if the user enters more than one letter per guess
+            # Alerts the user if they enter more than one letter per guess
             if len(message.content) > 1:
                 letter_embed = Embed(
                     title=choice(NEGATIVE_REPLIES),
