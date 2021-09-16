@@ -126,7 +126,7 @@ class Hangman(commands.Cog):
                 await original_message.edit(embed=timeout_embed)
                 return
 
-            # Automatically convert uppercase to lowercase letters
+            # If the user enters a capital letter as their guess, it is automatically converted to a lowercase letter
             message.content = message.content.lower()
 
             # Sends a message if the user enters more than one letter per guess
@@ -140,7 +140,7 @@ class Hangman(commands.Cog):
                 await to_delete.delete(delay=4)
                 continue
 
-            # Check for repeated guesses
+            # Checks for repeated guesses
             elif message.content in guessed_letters:
                 already_guessed_embed = Embed(
                     title=choice(NEGATIVE_REPLIES),
@@ -151,7 +151,7 @@ class Hangman(commands.Cog):
                 await to_delete.delete(delay=4)
                 continue
 
-            # Check for a correct guess from the user
+            # Checks for correct guesses from the user
             elif message.content in word:
                 positions = {idx for idx, letter in enumerate(word) if letter == message.content}
                 user_guess = "".join(
