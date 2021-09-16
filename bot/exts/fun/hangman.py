@@ -151,7 +151,7 @@ class Hangman(commands.Cog):
                 await to_delete.delete(delay=4)
                 continue
 
-            # Check for the correct guess from the user
+            # Check for a correct guess from the user
             elif message.content in word:
                 positions = {idx for idx, letter in enumerate(word) if letter == message.content}
                 user_guess = "".join(
