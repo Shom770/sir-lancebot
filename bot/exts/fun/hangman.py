@@ -104,7 +104,7 @@ class Hangman(commands.Cog):
             hangman_embed.set_image(url=IMAGES[tries])
             hangman_embed.add_field(
                 name=f"You've guessed `{user_guess}` so far.",
-                value="Guess the word by sending a message with the letter!",
+                value="Guess the word by sending a message with a letter!",
                 inline=False,
             )
             hangman_embed.set_footer(text=f"Tries: {tries}")
